@@ -33,10 +33,3 @@ node_modules/
 # Misc
 .DS_Store
 Thumbs.db
-
-
-
-
-
-# Production build
-www/
