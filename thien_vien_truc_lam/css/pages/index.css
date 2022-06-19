@@ -1,0 +1,21 @@
+/* -- custom css for file index.html -- */
+
+/* -- page-content -- */
+#page-contents-o-1004 {
+	background-color: rgb(254, 255, 255);
+}
+
+/* -- figure embed-responsive embed-responsive-21by9 -- */
+#figure-1005 {
+	background-image: url("../../img/14539.png");
+	 background-size: cover;
+	 background-repeat: no-repeat no-repeat;
+}
+
+/* -- h3 bg-transparent text-center -- */
+#h3-1007 {
+	background-color: rgb(76, 217, 100);
+	 color: rgb(16, 127, 1);
+	 font-size: 11px;
+}
+
