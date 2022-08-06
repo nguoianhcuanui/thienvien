@@ -1,84 +1,42 @@
-
-import HomePage from '../pages/home.jsx';
-import AboutPage from '../pages/about.jsx';
-import RegisterPage from '../pages/register.jsx';
-
-
-import DynamicRoutePage from '../pages/dynamic-route.jsx';
-import RequestAndLoad from '../pages/request-and-load.jsx';
-import NotFoundPage from '../pages/404.jsx';
-import RegisterSuccessPage from '../pages/register-success';
+import NotFoundPage from "../pages/404.jsx";
+import LoginPage from "../pages/adm/login.jsx";
+import RegistrationDetail from "../pages/adm/registration-detail.jsx";
+import RegistrationList from "../pages/adm/registration-list";
+import HomePage from "../pages/home.jsx";
+import RegisterSuccessPage from "../pages/register-success";
+import RegisterPage from "../pages/register.jsx";
 
 var routes = [
   {
-    path: '/',
+    path: "/",
     component: HomePage,
   },
   {
-    path: '/about/',
-    component: AboutPage,
-  },
-  {
-    path: '/dangky',
+    path: "/dangky",
     component: RegisterPage,
   },
   {
-    path: '/dangky/thanhcong',
+    path: "/dangky/thanhcong",
     component: RegisterSuccessPage,
   },
   {
-    path: '/dynamic-route/blog/:blogId/post/:postId/',
-    component: DynamicRoutePage,
+    path: "/quanly/dangnhap",
+    component: LoginPage,
   },
   {
-    path: '/request-and-load/user/:userId/',
-    async: function ({ router, to, resolve }) {
-      // App instance
-      var app = router.app;
-
-      // Show Preloader
-      app.preloader.show();
-
-      // User ID from request
-      var userId = to.params.userId;
-
-      // Simulate Ajax Request
-      setTimeout(function () {
-        // We got user data from request
-        var user = {
-          firstName: 'Vladimir',
-          lastName: 'Kharlampidi',
-          about: 'Hello, i am creator of Framework7! Hope you like it!',
-          links: [
-            {
-              title: 'Framework7 Website',
-              url: 'http://framework7.io',
-            },
-            {
-              title: 'Framework7 Forum',
-              url: 'http://forum.framework7.io',
-            },
-          ]
-        };
-        // Hide Preloader
-        app.preloader.hide();
-
-        // Resolve route to load page
-        resolve(
-          {
-            component: RequestAndLoad,
-          },
-          {
-            props: {
-              user: user,
-            }
-          }
-        );
-      }, 1000);
-    },
+    path: "/quanly/cusi",
+    component: RegistrationList,
   },
   {
-    path: '(.*)',
+    path: "/quanly/cusi/:id",
+    component: RegistrationDetail,
+  },
+  {
+    path: "/quanly",
+    component: RegistrationList,
+  },
+  {
+    path: "(.*)",
     component: NotFoundPage,
   },
 ];

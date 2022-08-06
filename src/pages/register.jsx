@@ -1,5 +1,4 @@
 import {
-  Block,
   BlockTitle,
   Button,
   Col,
@@ -10,18 +9,17 @@ import {
   Page,
   Row,
 } from "framework7-react";
-import React, { useState, useRef, useEffect } from "react";
-import PhotoUploader from "../components/photo-uploader";
-import { API_DOMAIN } from "../js/constant";
 import moment from "moment";
-import { animate } from "dom7";
+import React, { useRef, useState } from "react";
+import PhotoUploader from "../components/photo-uploader";
+import { register } from "../js/api";
 
 const RegisterPage = () => {
   const [frontImage, setFrontImage] = useState(null);
   const [backImage, setBackImage] = useState(null);
   const [submiting, setSubmiting] = useState(false);
   const form = useRef();
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     if (!validateForm()) {
       return;
     }
@@ -34,29 +32,19 @@ const RegisterPage = () => {
       data[key] = value;
     }
     setSubmiting(true);
-    fetch(`${API_DOMAIN}/registration-infos`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((body) => body.json())
-      .then((resp) => {
-        console.log(resp);
-        if (resp.error < 0) {
-          f7.dialog.alert("Có lỗi xảy ra!(" + resp.message + ")");
-        } else {
-          f7.views.main.router.navigate("/dangky/thanhcong", {
-            clearPreviousHistory: true,
-            animate: true,
-            history: false,
-            browserHistory: false,
-            openIn: 'loginScreen'
-          });
-        }
-        setSubmiting(false);
+    let resp = await register(data);
+    if (resp.error < 0) {
+      f7.dialog.alert("Có lỗi xảy ra!(" + resp.message + ")");
+    } else {
+      f7.views.main.router.navigate("/dangky/thanhcong", {
+        clearPreviousHistory: true,
+        animate: true,
+        history: false,
+        browserHistory: false,
+        openIn: "loginScreen",
       });
+    }
+    setSubmiting(false);
   };
   const validateForm = (validate, e) => {
     const formData = new FormData(form.current);
@@ -132,9 +120,8 @@ const RegisterPage = () => {
           <ListInput
             label="Ngày sinh"
             placeholder="Ngày sinh"
-            type="datepicker"
-            calendarParams={{ dateFormat: "dd/mm/yyyy" }}
-            defaultValue={[new Date()]}
+            type="date"
+            defaultValue={"1980-01-01"}
             errorMessage="Vui lòng nhập ngày sinh"
             name="birthday"
             required
@@ -154,9 +141,8 @@ const RegisterPage = () => {
           <ListInput
             label="Ngày cấp"
             placeholder="Ngày cấp"
-            type="datepicker"
-            calendarParams={{ dateFormat: "dd/mm/yyyy" }}
-            defaultValue={(() => moment().add(2, "day").format("YYYY-MM-DD"))()}
+            type="date"
+            defaultValue={"1990-01-01"}
             errorMessage="Vui lòng nhập ngày cấp CMND"
             name="idcardCreatedAt"
             required
@@ -224,6 +210,7 @@ const RegisterPage = () => {
             type="text"
             placeholder="Họ và tên"
             name="contactName"
+            errorMessage="Vui lòng nhập họ và tên người thân"
             required
             validate
           ></ListInput>
@@ -234,6 +221,8 @@ const RegisterPage = () => {
             name="contactPhone"
             required
             validate
+            style={{ marginBottom: "50px" }}
+            errorMessage="Vui lòng nhập số điện thoại người thân"
           ></ListInput>
         </List>
         <Button
@@ -244,11 +233,11 @@ const RegisterPage = () => {
           style={{
             position: "fixed",
             bottom: "0",
-            display: "block",
             width: "100%",
+            left: "0",
             zIndex: 5000,
+            borderRadius: 0,
           }}
-          outline
           loading={submiting}
         >
           Đăng ký

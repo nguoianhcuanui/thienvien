@@ -3,7 +3,7 @@
   "type": [
     "web"
   ],
-  "name": "ThienVienTrucLam",
+  "name": "Thiền viện Trúc Lâm",
   "framework": "react",
   "template": "single-view",
   "bundler": "vite",

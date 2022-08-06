@@ -1,19 +1,30 @@
+import { f7 } from "framework7-react";
+import React from "react";
+import { uploadImage } from "../js/api";
 import defaulImage from "/images/upload-image.jpeg";
-import React, { useState } from "react";
-import { API_DOMAIN } from "../js/constant";
+import { resizeImage } from "../js/image-utlils";
 const PhotoUploader = ({ value, onChange }) => {
   const selectPhoto = async (event) => {
+    let srcFile = event.target.files[0];
+    let image = await resizeImage({
+      file: srcFile,
+      maxSize: 1024,
+    });
+    let uploadFile = new File([image], srcFile.name, {
+      type: srcFile.type,
+      lastModified: new Date().getTime(),
+    });
+    // console.log(uploadFile, srcFile);
     var data = new FormData();
-    data.append("photo", event.target.files[0]);
-
-    fetch(`${API_DOMAIN}/upload/photo`, {
-      method: "POST",
-      body: data,
-    })
-      .then((body) => body.json())
-      .then((resp) => {
-        onChange(resp?.data?.url);
-      });
+    data.append("photo",uploadFile);
+    let resp = await uploadImage(data);
+    if (resp?.data?.url) {
+      onChange(resp?.data?.url);
+    } else {
+      f7.dialog.alert(
+        "Tải lên file không thành công. (Lỗi: " + resp.message + ")"
+      );
+    }
   };
   return (
     <div
