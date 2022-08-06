@@ -21,7 +21,7 @@ import AdmLayout from "./adm-layout";
 const RegistrationList = (props) => {
   const [tableData, setTableData] = useState([]);
   const [tableLoading, setTableLoading] = useState(true);
-  const [limit, setLimit] = useState(20);
+  const [limit, setLimit] = useState(50);
   const [keyword, setKeyword] = useState(null);
   const [selectedRows, setSelectedRows] = useState([]);
   useEffect(() => {
@@ -37,7 +37,11 @@ const RegistrationList = (props) => {
   }, []);
 
   const reload = async () => {
-    const resp = await getListRegistration({ limit, keyword });
+    let params = { limit };
+    if (keyword) {
+      params.keyword = keyword;
+    }
+    const resp = await getListRegistration(params);
     setTableData(resp.data?.list || []);
     setTableLoading(false);
   };
